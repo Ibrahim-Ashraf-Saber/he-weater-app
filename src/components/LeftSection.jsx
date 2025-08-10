@@ -37,7 +37,11 @@ export default function LeftSection({
           </h1>
           <div className="flex flex-col items-center gap-1">
             <h2 className="text-6xl font-semibold">{weatherData?.name}</h2>
-            <p className="mt-2">{new Date().toDateString()}</p>
+            <p className="mt-2">
+              {new Date().toLocaleDateString(
+                language === "ar" ? "ar-EG" : "en-US"
+              )}
+            </p>
           </div>
           <img
             className="w-24 h-24"
