@@ -58,7 +58,7 @@ export default function App() {
 
   return (
     <div
-      className="min-h-screen w-screen flex text-white"
+      className="flex w-screen min-h-screen overflow-hidden text-white"
       dir={language === "ar" ? "rtl" : "ltr"}
     >
       <ToastContainer
@@ -83,6 +83,7 @@ export default function App() {
         handleChangeLanguage={handleChangeLanguage}
         isLoading={isLoading}
         error={error}
+        key={weatherData?.name}
       />
       <RightSection
         weatherData={weatherData}

@@ -2,6 +2,7 @@ import SearchBar from "./SearchBar";
 import WeatherDetails from "./WeatherDetails";
 // import ForecastList from "./ForecastList";
 import WeatherDetailsSkeleton from "./WeatherDetailsSkeleton";
+import { motion } from "motion/react";
 
 export default function RightSection({
   weatherData,
@@ -11,7 +12,12 @@ export default function RightSection({
   error,
 }) {
   return (
-    <div className="backdrop-blur-md bg-transparent p-8 flex flex-col gap-8 z-10 w-[35%] pr-24">
+    <motion.div
+      initial={{ opacity: 0, x: 100 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.8, delay: 0.5 }}
+      className="backdrop-blur-md bg-transparent p-8 flex flex-col gap-8 z-10 w-[35%] pr-24"
+    >
       <SearchBar
         setCity={setCity}
         handleUseLocation={handleUseLocation}
@@ -26,6 +32,6 @@ export default function RightSection({
       )}
       <hr />
       {/* <ForecastList /> */}
-    </div>
+    </motion.div>
   );
 }

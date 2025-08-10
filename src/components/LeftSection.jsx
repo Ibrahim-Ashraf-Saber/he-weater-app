@@ -1,4 +1,5 @@
 import WeatherSkeleton from "./WeatherSkeleton";
+import { motion } from "motion/react";
 
 export default function LeftSection({
   weatherData,
@@ -11,8 +12,13 @@ export default function LeftSection({
   const iconUrl = `https://openweathermap.org/img/wn/${iconCode}@2x.png`;
 
   return (
-    <div className="flex-1 flex flex-col justify-between p-8 pl-24 z-10 w-[60%]">
-      <div className="flex justify-between items-start">
+    <motion.div
+      initial={{ opacity: 0, x: -100 }}
+      animate={{ opacity: 1, x: 0 }}
+      transition={{ duration: 0.8, delay: 0.5 }}
+      className="flex-1 flex flex-col justify-between p-8 pl-24 z-10 w-[60%]"
+    >
+      <div className="flex items-start justify-between">
         <div className="text-3xl font-bold">
           <span className="text-yellow-500">HE</span>Weather
         </div>
@@ -20,7 +26,7 @@ export default function LeftSection({
         <select
           value={language}
           onChange={(e) => handleChangeLanguage(e.target.value)}
-          className="p-2 rounded-full cursor-pointer bg-black/20 backdrop-blur-md outline-none"
+          className="p-2 rounded-full outline-none cursor-pointer bg-black/20 backdrop-blur-md"
         >
           <option value="en">English</option>
           <option value="ar">العربية</option>
@@ -31,8 +37,8 @@ export default function LeftSection({
       ) : error ? (
         <p className="text-4xl text-red-600">{error}</p>
       ) : (
-        <div className="flex mb-10 mt-7 items-center gap-3 justify-start">
-          <h1 className="text-8xl font-bold">
+        <div className="flex items-center justify-start gap-3 mb-10 mt-7">
+          <h1 className="font-bold text-8xl">
             {Math.round(weatherData?.main?.temp)}°
           </h1>
           <div className="flex flex-col items-center gap-1">
@@ -50,6 +56,6 @@ export default function LeftSection({
           />
         </div>
       )}
-    </div>
+    </motion.div>
   );
 }
