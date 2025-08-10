@@ -3,7 +3,7 @@ import { FaSearch } from "react-icons/fa";
 import { toast, Bounce } from "react-toastify";
 import { useTranslation } from "react-i18next";
 
-export default function SearchBar({ setCity, handleUseLocation }) {
+export default function SearchBar({ setCity, handleUseLocation, isLoading }) {
   const [input, setInput] = useState("");
   const { t } = useTranslation();
 
@@ -42,14 +42,16 @@ export default function SearchBar({ setCity, handleUseLocation }) {
           className="flex-1 bg-transparent outline-none text-white placeholder-gray-300"
           value={input}
           onChange={(e) => setInput(e.target.value)}
+          disabled={isLoading}
         />
-        <button type="submit">
+        <button type="submit" disabled={isLoading}>
           <FaSearch className="text-xl cursor-pointer" />
         </button>
       </form>
       <button
         onClick={handleUseLocation}
         className="bg-blue-600 hover:bg-blue-700 text-white py-2 rounded"
+        disabled={isLoading}
       >
         {t("Use My Location")}
       </button>

@@ -15,49 +15,23 @@ export default function App() {
   const [language, setLanguage] = useState("en");
   const { i18n } = useTranslation();
 
-  useEffect(() => {
-    const controller = new AbortController();
-    async function fetchWeather() {
-      try {
-        setIsLoading(true);
-        setError("");
-        const res = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric&lang=${language}`,
-          { signal: controller.signal }
-        );
-        if (!res.ok) throw new Error(`Failed to fetch weather for ${city}`);
-        const data = await res.json();
-        if (!data || !data.weather) throw new Error("No weather data found");
-        setWeatherData(data);
-        setError("");
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setIsLoading(false);
-      }
-    }
-
-    fetchWeather();
-
-    return () => {
-      controller.abort();
-    };
-  }, [city, language]);
-
-  useEffect(() => {
-    handleUseLocation();
-  }, []);
-
-  async function fetchWeatherByCoords(lat, lon) {
+  async function fetchWeatherData({ cityName, lat, lon }) {
     try {
-      const res = await fetch(
-        `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=${language}`
-      );
-      if (!res.ok) throw new Error(`Failed to fetch weather for ${city}`);
-      const data = await res.json();
-      if (!data || !data.weather) throw new Error("No weather data found");
-      setWeatherData(data);
+      setIsLoading(true);
       setError("");
+
+      const url =
+        lat && lon
+          ? `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${API_KEY}&units=metric&lang=${language}`
+          : `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}&units=metric&lang=${language}`;
+
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`Failed to fetch weather data`);
+
+      const data = await res.json();
+      if (!data.weather) throw new Error("No weather data found");
+
+      setWeatherData(data);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -65,19 +39,15 @@ export default function App() {
     }
   }
 
+  useEffect(() => {
+    fetchWeatherData({ cityName: city });
+  }, [city, language]);
+
   function handleUseLocation() {
-    setIsLoading(true);
     navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        fetchWeatherByCoords(latitude, longitude);
-        setIsLoading(false);
-        setError("");
-      },
-      (error) => {
-        setError("Unable to retrieve your location");
-        setIsLoading(false);
-      }
+      ({ coords }) =>
+        fetchWeatherData({ lat: coords.latitude, lon: coords.longitude }),
+      () => setError("Unable to retrieve your location")
     );
   }
 
